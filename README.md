@@ -1,6 +1,6 @@
 # ClipsWebsite-forNetamiTV
 
-This repository contains the source code for the NetamiTV Clips Website, a platform for managing and displaying clips from NetamiTV's streams.
+This repository contains the source code for the NetamiTV Clips Website, sadly it's mostly HTML based but i don't wanna change that.
 
 ## Features and Functionality
 
