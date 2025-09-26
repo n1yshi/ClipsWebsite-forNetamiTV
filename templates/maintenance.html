@@ -609,7 +609,6 @@
             color: rgba(255, 255, 255, 0.9);
         }
 
-        /* Ultra-Compact Social Links */
         .social-links {
             display: flex;
             justify-content: center;
@@ -657,7 +656,6 @@
             opacity: 1;
         }
 
-        /* Refresh Notice */
         .refresh-notice {
             display: flex;
             justify-content: center;
@@ -694,7 +692,6 @@
             100% { transform: rotate(360deg); }
         }
 
-        /* Enhanced Hover Effects */
         .maintenance-container:hover {
             transform: translateY(-3px) scale(1.01);
             box-shadow: 
@@ -703,7 +700,6 @@
                 inset 0 2px 0 rgba(255, 255, 255, 0.25);
         }
 
-        /* Responsive Design */
         @media (max-width: 768px) {
             .maintenance-container {
                 width: 95%;
@@ -766,7 +762,6 @@
             }
         }
 
-        /* Custom Scrollbar */
         ::-webkit-scrollbar {
             width: 8px;
         }
@@ -802,7 +797,6 @@
             }
         }
 
-        /* Accessibility */
         @media (prefers-reduced-motion: reduce) {
             *, *::before, *::after {
                 animation-duration: 0.01ms !important;
@@ -926,7 +920,6 @@
     </div>
 
     <script>
-        // Ultra-Enhanced Particle System
         function createAdvancedParticles() {
             const particlesContainer = document.getElementById('particles');
             const particleCount = window.innerWidth < 768 ? 40 : 80;
@@ -955,14 +948,13 @@
                 particle.style.width = size + 'px';
                 particle.style.height = size + 'px';
                 
-                // Random horizontal drift
+                // Random horizontal drift cause why not
                 particle.style.setProperty('--drift-x', (Math.random() - 0.5) * 300 + 'px');
                 
                 particlesContainer.appendChild(particle);
             }
         }
 
-        // Advanced Status Updates with Smooth Transitions
         function initializeStatusUpdates() {
             const statusTexts = [
                 'System wird aktualisiert',
@@ -992,7 +984,6 @@
                     statusText.style.opacity = '1';
                     statusText.style.transform = 'translateY(0)';
                     
-                    // Pulse effect
                     statusIndicator.style.transform = 'scale(1.08)';
                     setTimeout(() => {
                         statusIndicator.style.transform = 'scale(1)';
@@ -1003,12 +994,10 @@
             setInterval(updateStatus, 6000);
         }
 
-        // Enhanced Card Interactions with Ripple Effects
         function initializeCardInteractions() {
             const cards = document.querySelectorAll('.info-card, .contact-item');
             
             cards.forEach((card, index) => {
-                // Staggered entrance
                 card.style.opacity = '0';
                 card.style.transform = 'translateY(30px) scale(0.9)';
                 card.style.animation = `fadeInUp 1s cubic-bezier(0.2, 1, 0.3, 1) ${0.6 + (index * 0.1)}s forwards`;
@@ -1046,7 +1035,6 @@
             }, 1000);
         }
 
-        // Advanced Mouse Tracking with 3D Effects
         function initializeAdvancedMouseTracking() {
             const container = document.querySelector('.maintenance-container');
             let isHovering = false;
@@ -1084,7 +1072,6 @@
                     scale(1.01)
                 `;
                 
-                // Dynamic gradient following mouse
                 this.style.background = `
                     radial-gradient(circle at ${xPercent}% ${yPercent}%, 
                         rgba(138, 43, 226, 0.2) 0%, 
@@ -1095,21 +1082,17 @@
             });
         }
 
-        // Enhanced Social Link Interactions
         function initializeSocialInteractions() {
             const socialLinks = document.querySelectorAll('.social-link');
             
             socialLinks.forEach((link, index) => {
-                // Staggered entrance
                 link.style.opacity = '0';
                 link.style.transform = 'translateY(20px) scale(0.8)';
                 link.style.animation = `fadeInUp 0.8s cubic-bezier(0.2, 1, 0.3, 1) ${1.5 + (index * 0.1)}s forwards`;
                 
                 link.addEventListener('mouseenter', function() {
-                    // Create magnetic effect
                     this.style.transition = 'all 0.5s cubic-bezier(0.2, 1, 0.3, 1)';
                     
-                    // Animate other links away
                     socialLinks.forEach(otherLink => {
                         if (otherLink !== this) {
                             otherLink.style.transform = 'scale(0.9) translateY(3px)';
@@ -1126,12 +1109,9 @@
                     });
                 });
                 
-// Click animation with immediate redirect
 link.addEventListener('click', function(e) {
-    // Animation starten
     this.style.transform = 'scale(0.9) rotate(10deg)';
     
-    // Sofortige Weiterleitung (Animation läuft im Hintergrund)
     setTimeout(() => {
         this.style.transform = 'scale(1.1) rotate(-3deg)';
         setTimeout(() => {
@@ -1139,13 +1119,11 @@ link.addEventListener('click', function(e) {
         }, 150);
     }, 50);
     
-    // Kein e.preventDefault() = Link funktioniert normal
 });
 
             });
         }
 
-        // Advanced Keyboard Shortcuts
         function initializeKeyboardShortcuts() {
             let konami = [];
             const konamiCode = [38, 38, 40, 40, 37, 39, 37, 39, 66, 65]; // ↑↑↓↓←→←→BA
@@ -1185,7 +1163,6 @@ link.addEventListener('click', function(e) {
             const container = document.querySelector('.maintenance-container');
             container.style.animation = 'rainbow 2s ease-in-out';
             
-            // Add rainbow animation
             const style = document.createElement('style');
             style.textContent = `
                 @keyframes rainbow {
@@ -1228,7 +1205,6 @@ link.addEventListener('click', function(e) {
             const isAnimationPaused = document.body.style.animationPlayState === 'paused';
             document.body.style.animationPlayState = isAnimationPaused ? 'running' : 'paused';
             
-            // Visual feedback
             const notice = document.createElement('div');
             notice.textContent = isAnimationPaused ? 'Animationen aktiviert' : 'Animationen pausiert';
             notice.style.cssText = `
@@ -1249,7 +1225,6 @@ link.addEventListener('click', function(e) {
             setTimeout(() => notice.remove(), 3000);
         }
 
-        // Auto-refresh with user notification
         function initializeAutoRefresh() {
             let refreshTimer = 30;
             const refreshNotice = document.querySelector('.refresh-notice span');
@@ -1269,15 +1244,12 @@ link.addEventListener('click', function(e) {
                 }
             }, 1000);
             
-            // Allow user to cancel auto-refresh
             document.querySelector('.refresh-notice').addEventListener('click', () => {
                 clearInterval(countdown);
                 refreshNotice.textContent = 'Automatische Aktualisierung deaktiviert';
                 refreshNotice.style.color = '#00ff88';
             });
         }
-
-        // Performance monitoring simulation
         function simulatePerformanceMetrics() {
             const metrics = {
                 cpu: 45,
@@ -1286,44 +1258,34 @@ link.addEventListener('click', function(e) {
                 storage: 34
             };
             
-            // Simulate realistic fluctuations
             setInterval(() => {
                 Object.keys(metrics).forEach(key => {
                     const change = (Math.random() - 0.5) * 10;
                     metrics[key] = Math.max(0, Math.min(100, metrics[key] + change));
                 });
                 
-                // Update UI if performance cards exist
                 console.log('Performance Metrics:', metrics);
             }, 5000);
         }
 
         // Initialize everything
         document.addEventListener('DOMContentLoaded', function() {
-            // Core functionality
             createAdvancedParticles();
             initializeStatusUpdates();
             
-            // Enhanced interactions
             initializeCardInteractions();
             initializeSocialInteractions();
             initializeAdvancedMouseTracking();
             
-            // Advanced features
             initializeKeyboardShortcuts();
             simulatePerformanceMetrics();
             
-            // Auto-refresh (uncomment for production)
-            // initializeAutoRefresh();
-            
-            // Final loading animation
             setTimeout(() => {
                 document.body.classList.add('loaded');
                 console.log('🚀 Ultra-Compact Maintenance Page Loaded!');
             }, 1500);
         });
 
-        // Add CSS animations for new effects
         const additionalStyles = document.createElement('style');
         additionalStyles.textContent = `
             @keyframes fadeInUp {
@@ -1390,22 +1352,18 @@ link.addEventListener('click', function(e) {
         `;
         document.head.appendChild(additionalStyles);
 
-        // Smooth scroll behavior
         document.documentElement.style.scrollBehavior = 'smooth';
         
-        // Add scroll-based animations
         window.addEventListener('scroll', () => {
             const scrolled = window.pageYOffset;
             const rate = scrolled * -0.5;
             
-            // Parallax effect for background elements
             const bgElements = document.querySelector('.bg-elements');
             if (bgElements) {
                 bgElements.style.transform = `translateY(${rate}px)`;
             }
         });
-
-        // Intersection Observer for scroll animations
+        
         const observerOptions = {
             threshold: 0.1,
             rootMargin: '0px 0px -50px 0px'
@@ -1420,7 +1378,6 @@ link.addEventListener('click', function(e) {
             });
         }, observerOptions);
 
-        // Observe elements for scroll animations
         document.addEventListener('DOMContentLoaded', () => {
             const animatedElements = document.querySelectorAll('.info-card, .contact-section, .social-links');
             animatedElements.forEach(el => {
@@ -1428,7 +1385,6 @@ link.addEventListener('click', function(e) {
             });
         });
 
-        // Add loading screen effect
         window.addEventListener('load', () => {
             const loadingOverlay = document.createElement('div');
             loadingOverlay.style.cssText = `
