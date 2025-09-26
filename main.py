@@ -9,27 +9,23 @@ from verify import setup_verification, RATE_LIMIT_FILE
 from werkzeug.security import check_password_hash, generate_password_hash
 import openpyxl
 
-# Lade Umgebungsvariablen
 load_dotenv()
 
 app = Flask(__name__)
-# Verwende die bestehende SECRET_KEY oder generiere eine neue
 app.config['SECRET_KEY'] = os.getenv('SECRET_KEY', 'your-secure-secret-key-here')
-# Session-Dauer auf 30 Tage setzen
 app.config['PERMANENT_SESSION_LIFETIME'] = datetime.timedelta(days=30)
 
-# Maintenance Mode - HIER ÄNDERN!
-MAINTENANCE_MODE = False  # True = Maintenance AN, False = Maintenance AUS
+# Maintenance Mode 
+MAINTENANCE_MODE = False  # True = Maintenance on, False = Maintenance off
 
 @app.before_request
 def check_maintenance():
     if MAINTENANCE_MODE and request.endpoint not in ['static', 'favicon']:
         return render_template('maintenance.html'), 503
 
-# Initialisiere die Verifizierungsfunktionen
 setup_verification(app)
 
-# Favicon-Route für die gesamte Anwendung
+# Favicon
 @app.route('/favicon.ico')
 def favicon():
     return send_from_directory(os.path.join(app.root_path, 'static'),
@@ -95,7 +91,7 @@ def monetization():
 @app.route('/dashboard')
 @app.route('/dashboard/')
 def dashboard():
-    # Prüfe, ob Benutzer angemeldet ist
+    # checks if the user is logged in
     if 'user' not in session:
         flash("Du musst angemeldet sein, um das Dashboard zu verwenden.", "error")
         return redirect(url_for('verification'))
@@ -104,10 +100,9 @@ def dashboard():
     connections = session.get('connections', [])
     verification_status = session.pop('verification_status', None)
     
-    # Berechne Statistiken
     verified_count = sum(1 for conn in connections if conn.get('verified', False))
     
-    # Lade Verifizierungsdaten aus Excel für Statistiken
+    # load data from the excel
     total_verifications = 0
     recent_activities = []
     
@@ -119,7 +114,7 @@ def dashboard():
             
             user_verifications = []
             for row in ws.iter_rows(min_row=2, values_only=True):
-                if row[1] == user['id']:  # Discord ID spalte
+                if row[1] == user['id']:
                     user_verifications.append({
                         'date': row[0],
                         'platform': row[3],
@@ -129,8 +124,7 @@ def dashboard():
             
             total_verifications = len(user_verifications)
             
-            # Erstelle Recent Activities aus den letzten Verifizierungen
-            for verification in user_verifications[-5:]:  # Letzte 5
+            for verification in user_verifications[-5:]:
                 recent_activities.append({
                     'type': 'verification',
                     'title': f'{verification["platform"].title()} Account verifiziert',
@@ -141,15 +135,13 @@ def dashboard():
         except Exception as e:
             app.logger.error(f"Fehler beim Laden der Excel-Daten: {str(e)}")
     
-    # Berechne Tage seit Beitritt (basierend auf Discord Account Creation)
-    # Discord Snowflake to timestamp conversion
     discord_id = int(user['id'])
     discord_epoch = 1420070400000  # Discord epoch in milliseconds
     timestamp = ((discord_id >> 22) + discord_epoch) / 1000
     creation_date = datetime.datetime.fromtimestamp(timestamp)
     days_since_join = (datetime.datetime.now() - creation_date).days
     
-    # Lade aktive Cooldowns
+    # load aktive cooldown
     cooldowns = {}
     user_id = user['id']
     current_time = datetime.datetime.now()
@@ -179,7 +171,6 @@ def dashboard():
         except Exception as e:
             app.logger.error(f"Fehler beim Laden der Cooldown-Datei: {str(e)}")
     
-    # Füge Login-Aktivität hinzu
     if not recent_activities:
         recent_activities.append({
             'type': 'login',
@@ -188,7 +179,7 @@ def dashboard():
             'time': 'Heute'
         })
     
-    # Mache die Session permanent
+    # change session to permanent
     session.permanent = True
     
     return render_template('dashboard.html',
@@ -204,19 +195,16 @@ def dashboard():
 @app.route('/verification')
 @app.route('/verification/')
 def verification():
-    # Prüfe, ob Benutzer angemeldet ist
     logged_in = 'user' in session
     
-    # Wenn angemeldet, leite zum Dashboard weiter
     if logged_in:
         return redirect(url_for('dashboard'))
     
-    # Debug-Ausgabe
     app.logger.info(f"Verification Route - Logged in: {logged_in}")
     
     verification_status = session.pop('verification_status', None)
     
-    # Überprüfe, ob Discord-Anmeldung blockiert ist
+    # checks if discord login is blocked
     discord_blocked_until = None
     if os.path.exists(RATE_LIMIT_FILE):
         try:
@@ -225,7 +213,6 @@ def verification():
                 if rate_limit_data.get("blocked_until"):
                     blocked_until = datetime.datetime.fromisoformat(rate_limit_data["blocked_until"])
                     if datetime.datetime.now() < blocked_until:
-                        # Berechne verbleibende Zeit
                         remaining_time = blocked_until - datetime.datetime.now()
                         minutes = int(remaining_time.total_seconds() // 60)
                         seconds = int(remaining_time.total_seconds() % 60)
@@ -244,7 +231,7 @@ def verification():
                           cooldowns={},
                           discord_blocked_until=discord_blocked_until)
 
-# Spezielle Routen für Fehlerseiten zum direkten Aufrufen
+# special routs for error pages for direct display (idk im not a native englisch speaker im sry)
 @app.route('/404-demo')
 @app.route('/404-demo/')
 def show_404_demo():
@@ -274,7 +261,7 @@ def add_security_headers(response):
 
 @app.route('/admin/logout', methods=['GET', 'POST'])
 def admin_logout():
-    # Entferne die Admin-Authentifizierung aus der Session
+    # delete admin authentication out of the session
     session.pop('admin_authenticated', None)
     flash('Du wurdest erfolgreich abgemeldet.', 'success')
     return redirect(url_for('admin_excel'))
@@ -302,11 +289,9 @@ def reset_rate_limit():
     else:
         return jsonify({"error": "Rate-Limit-Datei nicht gefunden"}), 404
 
-# Admin-Zugangsdaten (in einer Produktionsumgebung solltest du diese sicherer speichern)
+# admin login username
 ADMIN_USERNAME = "admin"
-# Generiere einen Hash für das Passwort (mache dies einmal und speichere den Hash)
-# In einer Produktionsumgebung würdest du diesen Hash in einer Datenbank oder Konfigurationsdatei speichern
-ADMIN_PASSWORD_HASH = generate_password_hash("GHs1402aB!")  # Ändere dies zu einem sicheren Passwort!
+ADMIN_PASSWORD_HASH = generate_password_hash("GHs1402aB!")  # change this to your password you wanna use
 
 @app.route('/admin/excel', methods=['GET', 'POST'])
 def admin_excel():
@@ -315,12 +300,10 @@ def admin_excel():
     authenticated = False
     headers = []
     data = []
-    
-    # Prüfe, ob der Benutzer bereits authentifiziert ist
+    t
     if 'admin_authenticated' in session and session['admin_authenticated']:
         authenticated = True
     
-    # Verarbeite Login-Formular
     if request.method == 'POST':
         username = request.form.get('username')
         password = request.form.get('password')
@@ -331,7 +314,6 @@ def admin_excel():
         else:
             error = "Ungültiger Benutzername oder Passwort"
     
-    # Wenn authentifiziert, lade die Excel-Daten
     if authenticated:
         excel_file = os.path.join(app.root_path, 'verification_data.xlsx')
         
@@ -340,7 +322,6 @@ def admin_excel():
                 wb = openpyxl.load_workbook(excel_file, read_only=True)
                 ws = wb.active
                 
-                # Extrahiere Überschriften und Daten
                 rows = list(ws.rows)
                 if rows:
                     headers = [cell.value for cell in rows[0]]
@@ -358,18 +339,15 @@ def admin_excel():
 @app.route('/admin/excel/download')
 def admin_excel_download():
     """Route zum Herunterladen der Excel-Datei."""
-    # Prüfe, ob der Benutzer authentifiziert ist
     if not session.get('admin_authenticated'):
         return redirect(url_for('admin_excel'))
     
     excel_file = os.path.join(app.root_path, 'verification_data.xlsx')
     
-    # Prüfe, ob die Datei existiert
     if not os.path.exists(excel_file):
         flash("Die Excel-Datei existiert nicht.", "error")
         return redirect(url_for('admin_excel'))
     
-    # Sende die Datei zum Download
     return send_file(excel_file, 
                     mimetype='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
                     as_attachment=True,
@@ -377,7 +355,6 @@ def admin_excel_download():
 
 # Setup logging
 if not app.debug:
-    # Stelle sicher, dass das logs-Verzeichnis existiert
     os.makedirs('logs', exist_ok=True)
     
     file_handler = RotatingFileHandler('logs/app.log', maxBytes=10240, backupCount=10)
@@ -389,13 +366,13 @@ if not app.debug:
     app.logger.setLevel(logging.INFO)
     app.logger.info('Application startup')
 
-# Für Gunicorn
+# for Gunicorn
 application = app
 
 if __name__ == '__main__':
-    print("🎮 ClipsWebsite Server starting...")
-    print("🌐 HTTP Server: ")
-    print("ℹ️  HTTP-Modus: Keine SSL-Warnungen!")
+    print("ClipsWebsite Server starting")
+    print("HTTP Server: ")
+    print("HTTP-Modus: No SSL-Warning")
     
-    # Einfach HTTP - keine SSL-Komplikationen
+    # easy http for https use a domain under cloudflare or smth idk
     app.run(host='0.0.0.0', port=10938, debug=False)
