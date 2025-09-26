@@ -213,7 +213,6 @@
             }
         }
 
-        /* Video content container */
         .video-container {
             max-width: 1200px;
             margin: 0 auto 40px;
@@ -463,7 +462,6 @@
             100% { opacity: 1; }
         }
         
-        /* Animated background elements */
         .animated-bg {
             position: fixed;
             top: 0;
@@ -501,7 +499,6 @@
             100% { background-position: 50px 50px; }
         }
 
-/* Responsive design */
 @media (max-width: 768px) {
     .videos-grid {
         grid-template-columns: repeat(2, 1fr);
@@ -545,10 +542,8 @@
             <h1>Hochladen</h1>
         </header>
         
-        <!-- Video content container -->
         <div class="video-container">
             <div class="videos-grid">
-                <!-- Video 1 -->
                 <div class="video-item">
                     <div class="video-title">Wie du deinen Youtube Kanal erstellst und optimierst</div>
                     <div class="video-embed">
@@ -563,7 +558,6 @@
                     </div>
                 </div>
 
-                <!-- Video 2 -->
                 <div class="video-item">
                     <div class="video-title">Wie du deinen TikTok Kanal erstellst</div>
                     <div class="video-embed">
@@ -577,7 +571,6 @@
                     </div>
                 </div>
 
-                <!-- Video 3 -->
                 <div class="video-item">
                     <div class="video-title">Deine Clips einreichen</div>
                     <div class="video-embed">
@@ -591,7 +584,6 @@
                     </div>
                 </div>
 
-                <!-- Video 4 -->
                 <div class="video-item">
                     <div class="video-title">Twitch Clips erstellen</div>
                     <div class="video-embed">
@@ -621,22 +613,18 @@
     </footer>
 
     <script>
-        // 3D effect on mouse move
         const videoContainer = document.querySelector('.video-container');
         
         document.addEventListener('mousemove', (e) => {
             const x = e.clientX / window.innerWidth;
             const y = e.clientY / window.innerHeight;
             
-            // Calculate rotation based on mouse position
             const rotateX = (y - 0.5) * 5;
             const rotateY = (x - 0.5) * -5;
             
-            // Apply smooth rotation to container
             videoContainer.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg)`;
         });
         
-        // Add ripple effect on click
         document.addEventListener('click', (e) => {
             const ripple = document.createElement('div');
             ripple.className = 'ripple';
@@ -665,7 +653,6 @@
             }, 600);
         });
 
-        // Add staggered animation to video items
         const videoItems = document.querySelectorAll('.video-item');
         videoItems.forEach((item, index) => {
             item.style.animationDelay = `${index * 0.2}s`;
@@ -673,4 +660,5 @@
         });
     </script>
 </body>
+
 </html>
