@@ -54,7 +54,6 @@
             z-index: 1;
         }
 
-        /* Navigation Bar */
         .nav-bar {
             position: relative;
             display: flex;
@@ -214,7 +213,6 @@
             transition: opacity 0.3s ease;
         }
         
-        /* Verification specific styles */
         .verification-card {
             text-align: center;
             max-width: 800px;
@@ -270,7 +268,6 @@
             margin-bottom: 15px;
         }
         
-        /* Wichtig: Vereinfachte Button-Styles ohne 3D-Effekte */
         .btn {
             display: inline-block;
             padding: 12px 30px;
@@ -512,7 +509,6 @@
             font-weight: bold;
         }
         
-        /* Animated background elements */
         .animated-bg {
             position: fixed;
             top: 0;
@@ -548,7 +544,6 @@
             100% { background-position: 50px 50px; }
         }
         
-        /* Loading animation */
         .loading-overlay {
             position: fixed;
             top: 0;
@@ -578,7 +573,6 @@
             100% { transform: rotate(360deg); }
         }
         
-        /* Countdown timer */
         .countdown {
             display: inline-block;
             padding: 5px 10px;
@@ -588,7 +582,6 @@
             margin-left: 5px;
         }
         
-        /* Responsive adjustments */
         @media (max-width: 768px) {
             .header h1 {
                 font-size: 2.2rem;
@@ -612,7 +605,6 @@
             }
         }
         
-        /* Custom scrollbar */
         ::-webkit-scrollbar {
             width: 10px;
         }
@@ -723,7 +715,6 @@
                 </ul>
                 
                 <div class="verification-forms">
-                    <!-- YouTube-Formular -->
                     <div class="form-container">
                         <h4>YouTube Video verifizieren</h4>
                         <form action="/verify-video" method="post">
@@ -742,7 +733,6 @@
                         </form>
                     </div>
                     
-                    <!-- TikTok-Formular -->
                     <div class="form-container">
                         <h4>TikTok Video verifizieren</h4>
                         <form action="/verify-video" method="post">
@@ -791,7 +781,6 @@
 </footer>
 
 <script>
-    // Loading animation
     window.addEventListener('load', function() {
         const loadingOverlay = document.getElementById('loading-overlay');
         setTimeout(function() {
@@ -802,7 +791,6 @@
         }, 1000);
     });
     
-    // Disable buttons with cooldowns
     document.addEventListener('DOMContentLoaded', function() {
         const cooldownButtons = document.querySelectorAll('button[disabled]');
         cooldownButtons.forEach(button => {
@@ -811,7 +799,6 @@
         });
     });
     
-    // Add ripple effect on button click
     const buttons = document.querySelectorAll('.btn:not([disabled])');
     buttons.forEach(button => {
         button.addEventListener('click', function(e) {
@@ -838,7 +825,6 @@
         });
     });
     
-    // Add keyframe for ripple animation
     const style = document.createElement('style');
     style.innerHTML = `
         @keyframes ripple {
@@ -850,7 +836,6 @@
     `;
     document.head.appendChild(style);
     
-    // Countdown timer for Discord rate limit
     const discordBlockedUntilElement = document.querySelector('.verification-status.warning');
     if (discordBlockedUntilElement) {
         const minutesElement = discordBlockedUntilElement.querySelector('p:nth-child(2)');
@@ -881,12 +866,10 @@
         }
     }
     
-    // Animate verification status
     const verificationStatus = document.querySelector('.verification-status');
     if (verificationStatus) {
         verificationStatus.style.animation = 'fadeIn 0.5s ease-in-out';
         
-        // Add keyframe for fadeIn animation
         const fadeInStyle = document.createElement('style');
         fadeInStyle.innerHTML = `
             @keyframes fadeIn {
@@ -904,4 +887,5 @@
     }
 </script>
 </body>
+
 </html>
