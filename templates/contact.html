@@ -412,7 +412,6 @@
             }
         }
         
-        /* Button pulse animation */
         @keyframes buttonPulse {
             0% {
                 box-shadow: 0 0 0 0 rgba(138, 43, 226, 0.7);
@@ -425,7 +424,6 @@
             }
         }
         
-        /* Custom scrollbar */
         ::-webkit-scrollbar {
             width: 10px;
         }
@@ -518,7 +516,6 @@
 
     <script>
         document.addEventListener('DOMContentLoaded', function() {
-            // Add gentle glow effect on mouse move
             const contactInfo = document.querySelector('.contact-info');
             const glowEffect = contactInfo.querySelector('.glow-effect');
             
@@ -530,32 +527,28 @@
                 const xPercent = x / rect.width;
                 const yPercent = y / rect.height;
                 
-                // Update glow position
                 if (glowEffect) {
                     glowEffect.style.background = `radial-gradient(circle at ${xPercent * 100}% ${yPercent * 100}%, rgba(138, 43, 226, 0.3) 0%, transparent 70%)`;
                 }
             });
             
             contactInfo.addEventListener('mouseleave', function() {
-                // Reset glow effect
                 if (glowEffect) {
                     glowEffect.style.background = 'radial-gradient(circle at center, rgba(138, 43, 226, 0.2) 0%, transparent 70%)';
                 }
             });
             
-            // Add button hover effects
             const backLink = document.querySelector('.back-link');
             if (backLink) {
                 backLink.addEventListener('mouseenter', function() {
-                    this.style.animation = 'none'; // Pause the pulse animation on hover
+                    this.style.animation = 'none'; 
                 });
                 
                 backLink.addEventListener('mouseleave', function() {
-                    this.style.animation = 'buttonPulse 2s infinite'; // Resume pulse animation
+                    this.style.animation = 'buttonPulse 2s infinite'; 
                 });
             }
             
-            // Add hover effects to contact methods
             const contactMethods = document.querySelectorAll('.contact-method');
             contactMethods.forEach(method => {
                 method.addEventListener('mouseenter', function() {
@@ -575,4 +568,5 @@
         });
     </script>
 </body>
+
 </html>
