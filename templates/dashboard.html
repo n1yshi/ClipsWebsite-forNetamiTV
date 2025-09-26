@@ -235,7 +235,6 @@
         .steam-icon { background: #171a21; }
         .stats-icon { background: var(--accent-gradient); }
 
-        /* Connected Accounts */
         .account-list {
             display: flex;
             flex-direction: column;
@@ -318,7 +317,6 @@
             transform: rotate(-2deg) scale(1.05);
         }
 
-        /* Statistics */
         .stats-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
@@ -360,7 +358,6 @@
             color: var(--text-secondary);
         }
 
-        /* Recent Activity */
         .activity-list {
             display: flex;
             flex-direction: column;
@@ -417,7 +414,6 @@
             margin-left: auto;
         }
 
-        /* Verification Section */
         .verification-section {
             grid-column: 1 / -1;
             background: var(--card-bg);
@@ -527,7 +523,6 @@
             background: rgba(255, 255, 255, 0.2);
         }
 
-        /* Status Messages */
         .status-message {
             padding: 15px;
             border-radius: 10px;
@@ -555,7 +550,6 @@
             color: var(--warning-color);
         }
 
-        /* Cooldown Display */
         .cooldown-display {
             background: rgba(255, 152, 0, 0.1);
             border: 1px solid var(--warning-color);
@@ -569,7 +563,6 @@
             color: var(--warning-color);
         }
 
-        /* Tab switching animations */
         .tab-content {
             opacity: 0;
             animation: fadeIn 0.3s ease-out forwards;
@@ -581,7 +574,6 @@
             }
         }
 
-        /* Responsive Design */
         @media (max-width: 1200px) {
             .dashboard-grid {
                 grid-template-columns: 1fr;
@@ -612,7 +604,6 @@
             }
         }
 
-        /* Custom Scrollbar */
         ::-webkit-scrollbar {
             width: 8px;
         }
@@ -633,7 +624,6 @@
 </head>
 <body>
     <div class="container">
-        <!-- Header -->
         <div class="dashboard-header">
             <h1 class="dashboard-title">
                 <i class="fas fa-tachometer-alt"></i>
@@ -653,7 +643,6 @@
             </div>
         </div>
 
-        <!-- Navigation Tabs -->
         <div class="nav-tabs">
             <button class="nav-tab active" onclick="showTab('overview')">
                 <i class="fas fa-chart-line"></i> Übersicht
@@ -669,19 +658,15 @@
             </button>
         </div>
 
-        <!-- Status Messages -->
         {% if verification_status %}
         <div class="status-message {% if verification_status.success %}success{% else %}error{% endif %}">
             <i class="fas {% if verification_status.success %}fa-check-circle{% else %}fa-exclamation-circle{% endif %}"></i>
             {{ verification_status.message }}
         </div>
         {% endif %}
-
-        <!-- Tab Content -->
+        
         <div id="overview-tab" class="tab-content">
-            <!-- Main Stats Grid -->
             <div style="display: grid; grid-template-columns: 2fr 1fr; gap: 30px; margin-bottom: 30px;">
-                <!-- Statistics Card -->
                 <div class="dashboard-card">
                     <div class="card-header">
                         <div class="card-title">
@@ -715,7 +700,6 @@
                     </div>
                 </div>
 
-                <!-- Account Status Card -->
                 <div class="dashboard-card">
                     <div class="card-header">
                         <div class="card-title">
@@ -766,9 +750,8 @@
                 </div>
             </div>
 
-            <!-- Second Row -->
+
             <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 20px;">
-                <!-- Quick Actions Card -->
                 <div class="dashboard-card">
                     <div class="card-header">
                         <div class="card-title">
@@ -791,7 +774,6 @@
                     </div>
                 </div>
 
-                <!-- Platform Status Card -->
                 <div class="dashboard-card">
                     <div class="card-header">
                         <div class="card-title">
@@ -824,7 +806,6 @@
                     </div>
                 </div>
 
-                <!-- System Info Card -->
                 <div class="dashboard-card">
                     <div class="card-header">
                         <div class="card-title">
@@ -959,7 +940,6 @@
                 {% endif %}
 
                 <div class="verification-forms">
-                    <!-- YouTube Verification -->
                     <div class="verification-form">
                         <h4 style="display: flex; align-items: center; gap: 10px; margin-bottom: 20px;">
                             <div class="platform-icon youtube-icon">
@@ -986,7 +966,6 @@
                         </form>
                     </div>
 
-                    <!-- TikTok Verification -->
                     <div class="verification-form">
                         <h4 style="display: flex; align-items: center; gap: 10px; margin-bottom: 20px;">
                             <div class="platform-icon tiktok-icon">
@@ -1073,38 +1052,29 @@
 
     <script>
         function showTab(tabName) {
-            // Hide all tab contents
             const tabContents = document.querySelectorAll('.tab-content');
             tabContents.forEach(tab => {
                 tab.style.display = 'none';
             });
 
-            // Remove active class from all nav tabs
             const navTabs = document.querySelectorAll('.nav-tab');
             navTabs.forEach(tab => {
                 tab.classList.remove('active');
             });
 
-            // Show selected tab content
             document.getElementById(tabName + '-tab').style.display = 'block';
 
-            // Add active class to clicked nav tab
             event.target.classList.add('active');
         }
 
-        // Auto-refresh cooldown timers
         function updateCooldowns() {
             const cooldownTimers = document.querySelectorAll('.cooldown-timer');
             cooldownTimers.forEach(timer => {
-                // This would need to be implemented with actual countdown logic
-                // For now, it's just a placeholder
             });
         }
 
-        // Update cooldowns every minute
         setInterval(updateCooldowns, 60000);
 
-        // Add ripple effect to buttons
         document.querySelectorAll('.btn').forEach(button => {
             button.addEventListener('click', function(e) {
                 const ripple = document.createElement('span');
@@ -1126,7 +1096,6 @@
             });
         });
 
-        // Add CSS for ripple effect
         const style = document.createElement('style');
         style.textContent = `
             .btn {
