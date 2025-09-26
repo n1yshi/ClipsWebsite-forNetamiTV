@@ -375,7 +375,6 @@
             opacity: 1;
         }
         
-        /* Scroll animations */
         @keyframes fadeInUp {
             from {
                 opacity: 0;
@@ -387,7 +386,6 @@
             }
         }
         
-        /* Button pulse animation */
         @keyframes buttonPulse {
             0% {
                 box-shadow: 0 0 0 0 rgba(138, 43, 226, 0.7);
@@ -400,7 +398,6 @@
             }
         }
         
-        /* Custom scrollbar */
         ::-webkit-scrollbar {
             width: 10px;
         }
@@ -508,7 +505,6 @@
 
     <script>
         document.addEventListener('DOMContentLoaded', function() {
-            // Add gentle glow effect on mouse move
             const privacyContent = document.querySelector('.privacy-content');
             const glowEffect = privacyContent.querySelector('.glow-effect');
             
@@ -520,32 +516,28 @@
                 const xPercent = x / rect.width;
                 const yPercent = y / rect.height;
                 
-                // Update glow position
                 if (glowEffect) {
                     glowEffect.style.background = `radial-gradient(circle at ${xPercent * 100}% ${yPercent * 100}%, rgba(138, 43, 226, 0.3) 0%, transparent 70%)`;
                 }
             });
             
             privacyContent.addEventListener('mouseleave', function() {
-                // Reset glow effect
                 if (glowEffect) {
                     glowEffect.style.background = 'radial-gradient(circle at center, rgba(138, 43, 226, 0.2) 0%, transparent 70%)';
                 }
             });
             
-            // Add button hover effects
             const backLink = document.querySelector('.back-link');
             if (backLink) {
                 backLink.addEventListener('mouseenter', function() {
-                    this.style.animation = 'none'; // Pause the pulse animation on hover
+                    this.style.animation = 'none'; 
                 });
                 
                 backLink.addEventListener('mouseleave', function() {
-                    this.style.animation = 'buttonPulse 2s infinite'; // Resume pulse animation
+                    this.style.animation = 'buttonPulse 2s infinite'; 
                 });
             }
             
-            // Add hover effects to privacy sections
             const privacySections = document.querySelectorAll('.privacy-section');
             privacySections.forEach(section => {
                 section.addEventListener('mouseenter', function() {
@@ -563,7 +555,6 @@
                 });
             });
             
-            // Staggered animation for privacy sections
             privacySections.forEach((section, index) => {
                 section.style.opacity = '0';
                 section.style.animation = `fadeInUp 0.8s forwards`;
@@ -572,4 +563,5 @@
         });
     </script>
 </body>
+
 </html>
