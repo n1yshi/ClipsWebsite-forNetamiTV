@@ -12,36 +12,33 @@ from openpyxl import Workbook, load_workbook
 from banned_ips import init_banned_ips, is_ip_banned, ban_ip, unban_ip, get_banned_ips
 from werkzeug.security import check_password_hash
 
-# Lade Umgebungsvariablen erneut
 load_dotenv()
 
-# Logger konfigurieren
 logger = logging.getLogger(__name__)
 
-# Discord-Konfiguration
+# Discord config
 DISCORD_CLIENT_ID = os.getenv("DISCORD_CLIENT_ID", "")
 DISCORD_CLIENT_SECRET = os.getenv("DISCORD_CLIENT_SECRET", "")
 DISCORD_REDIRECT_URI = os.getenv("DISCORD_REDIRECT_URI", "")
 DISCORD_API_ENDPOINT = "https://discord.com/api/v10"
 
-# YouTube API Konfiguration
+# YouTube API (idk free api is enough)
 YOUTUBE_API_KEY = os.getenv("YOUTUBE_API_KEY", "")
 YOUTUBE_API_BASE_URL = "https://www.googleapis.com/youtube/v3"
 
-# Pfad zur Excel-Datei
+# path to the excel
 EXCEL_FILE = "verification_data.xlsx"
 
-# Rate-Limit-Tracking
-RATE_LIMIT_FILE = "discord_rate_limit.json"
-MAX_REQUESTS_PER_HOUR = 100  # Erhöht von 50 auf 100
 
-# Pfad zur Cooldown-Datei
+RATE_LIMIT_FILE = "discord_rate_limit.json"
+MAX_REQUESTS_PER_HOUR = 100
+
+# for verification
 COOLDOWN_FILE = "verification_cooldowns.json"
 
-# Admin-Zugangsdaten (aus main.py)
+# idiot cause its in the file not in an .env but you can recode it
 ADMIN_USERNAME = "admin"
-ADMIN_PASSWORD_HASH = "pbkdf2:sha256:260000$vGKtGO5E1pZgakVl$4f3c0a0373c3e9ecef95294ffd5d5641c9b6c0ec9c9302d9d17a2fdcc4432043"  # Hash für "test"
-
+ADMIN_PASSWORD_HASH = "pbkdf2:sha256:260000$vGKtGO5E1pZgakVl$4f3c0a0373c3e9ecef95294ffd5d5641c9b6c0ec9c9302d9d17a2fdcc4432043"
 def get_client_ip():
     """Get the client's IP address from the request."""
     if request.environ.get('HTTP_X_FORWARDED_FOR'):
@@ -53,41 +50,32 @@ def get_client_ip():
 
 def setup_verification(app):
     """Initialisiert die Verifizierungsfunktionen mit der Flask-App."""
-    # Registriere die Routen
     app.add_url_rule('/auth/discord/login', 'discord_login', discord_login)
     app.add_url_rule('/auth/discord/callback', 'discord_callback', discord_callback)
     app.add_url_rule('/auth/logout', 'auth_logout', auth_logout)
     app.add_url_rule('/verify-video', 'verify_video', verify_video, methods=['POST'])
-    
-    # Admin routes for IP banning
+
     app.add_url_rule('/admin/ban-ip', 'admin_ban_ip', admin_ban_ip, methods=['POST'])
     app.add_url_rule('/admin/unban-ip', 'admin_unban_ip', admin_unban_ip, methods=['POST'])
     app.add_url_rule('/admin/banned-ips', 'admin_banned_ips', admin_banned_ips, methods=['GET', 'POST'])
     
-    # Logger mit App-Logger verbinden
     global logger
     logger = app.logger
-    
-    # Initialisiere Rate-Limit-Tracking
+
     init_rate_limit_tracking()
-    
-    # Initialisiere Cooldown-Tracking
+
     init_cooldown_tracking()
-    
-    # Initialisiere Banned IPs
+
     init_banned_ips()
-    
-    # Add before_request handler to check for banned IPs
+
     @app.before_request
     def check_if_banned():
-        # Skip ban check for admin routes
         if request.path.startswith('/admin'):
             return None
             
         ip = get_client_ip()
         ban = is_ip_banned(ip)
         if ban:
-            # User is banned, show ban page
             return render_template('banned.html', reason=ban["reason"]), 403
     
     logger.info("Verification routes registered")
@@ -105,7 +93,6 @@ def init_rate_limit_tracking():
 def init_cooldown_tracking():
     """Initialisiert das Cooldown-Tracking."""
     if not os.path.exists(COOLDOWN_FILE):
-        # Erstelle eine leere Cooldown-Datei
         with open(COOLDOWN_FILE, 'w') as f:
             json.dump({}, f)
         logger.info(f"Cooldown-Datei {COOLDOWN_FILE} erstellt")
@@ -113,23 +100,18 @@ def init_cooldown_tracking():
 def check_rate_limit():
     """Überprüft, ob wir das Rate-Limit erreicht haben."""
     try:
-        # Lade aktuelle Rate-Limit-Daten
         with open(RATE_LIMIT_FILE, 'r') as f:
             rate_limit_data = json.load(f)
         
-        # Überprüfe, ob wir blockiert sind
         if rate_limit_data.get("blocked_until"):
             blocked_until = datetime.datetime.fromisoformat(rate_limit_data["blocked_until"])
             if datetime.datetime.now() < blocked_until:
-                # Noch blockiert
                 remaining_time = blocked_until - datetime.datetime.now()
                 minutes = int(remaining_time.total_seconds() // 60)
                 return False, f"Discord API ist derzeit nicht verfügbar. Bitte versuche es in {minutes} Minuten erneut."
             else:
-                # Blockierung aufgehoben
                 rate_limit_data["blocked_until"] = None
         
-        # Entferne alte Anfragen (älter als 1 Stunde)
         current_time = datetime.datetime.now()
         one_hour_ago = current_time - datetime.timedelta(hours=1)
         rate_limit_data["requests"] = [
@@ -137,16 +119,13 @@ def check_rate_limit():
             if datetime.datetime.fromisoformat(req) > one_hour_ago
         ]
         
-        # Überprüfe, ob wir das Limit erreicht haben
         if len(rate_limit_data["requests"]) >= MAX_REQUESTS_PER_HOUR:
-            # Setze Blockierung für 30 Minuten
             blocked_until = current_time + datetime.timedelta(minutes=30)
             rate_limit_data["blocked_until"] = blocked_until.isoformat()
             with open(RATE_LIMIT_FILE, 'w') as f:
                 json.dump(rate_limit_data, f)
             return False, "Discord API-Limit erreicht. Bitte versuche es in 30 Minuten erneut."
         
-        # Füge neue Anfrage hinzu
         rate_limit_data["requests"].append(current_time.isoformat())
         with open(RATE_LIMIT_FILE, 'w') as f:
             json.dump(rate_limit_data, f)
@@ -154,7 +133,6 @@ def check_rate_limit():
         return True, None
     except Exception as e:
         logger.error(f"Fehler beim Überprüfen des Rate-Limits: {str(e)}", exc_info=True)
-        # Im Fehlerfall erlauben wir die Anfrage
         return True, None
 
 def update_rate_limit_block(retry_after):
@@ -163,7 +141,6 @@ def update_rate_limit_block(retry_after):
         with open(RATE_LIMIT_FILE, 'r') as f:
             rate_limit_data = json.load(f)
         
-        # Setze Blockierung basierend auf Discord's Retry-After
         blocked_until = datetime.datetime.now() + datetime.timedelta(seconds=retry_after)
         rate_limit_data["blocked_until"] = blocked_until.isoformat()
         
@@ -176,13 +153,12 @@ def update_rate_limit_block(retry_after):
 
 def discord_login():
     """Route für die Discord-Anmeldung."""
-    # Überprüfe Rate-Limit
     can_proceed, error_message = check_rate_limit()
     if not can_proceed:
         flash(error_message, "error")
         return redirect(url_for('verification'))
     
-    # Erstelle Discord OAuth2 URL mit dem Scope 'connections'
+    # 0Auth2 Url creation with Scopes
     scope = "identify email connections"
     discord_login_url = f"{DISCORD_API_ENDPOINT}/oauth2/authorize?client_id={DISCORD_CLIENT_ID}&redirect_uri={DISCORD_REDIRECT_URI}&response_type=code&scope={scope}"
     logger.info(f"Redirecting to Discord login URL")
