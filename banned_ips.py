@@ -50,7 +50,6 @@ def ban_ip(ip_address, reason="No reason provided", duration_days=None):
         # Check if IP is already banned
         for ban in banned_data["banned_ips"]:
             if ban["ip"] == ip_address:
-                # Update existing ban
                 ban["reason"] = reason
                 ban["banned_at"] = datetime.datetime.now().isoformat()
                 if duration_days:
@@ -72,7 +71,6 @@ def ban_ip(ip_address, reason="No reason provided", duration_days=None):
             
             banned_data["banned_ips"].append(new_ban)
         
-        # Save the updated ban list
         with open(BANNED_IPS_FILE, 'w') as f:
             json.dump(banned_data, f, indent=2)
         
@@ -87,13 +85,10 @@ def unban_ip(ip_address):
     try:
         banned_data = get_banned_ips()
         
-        # Find the ban to remove
         for i, ban in enumerate(banned_data["banned_ips"]):
             if ban["ip"] == ip_address:
-                # Remove the ban
                 del banned_data["banned_ips"][i]
                 
-                # Save the updated ban list
                 with open(BANNED_IPS_FILE, 'w') as f:
                     json.dump(banned_data, f, indent=2)
                 
@@ -105,3 +100,4 @@ def unban_ip(ip_address):
     except Exception as e:
         logger.error(f"Error unbanning IP {ip_address}: {str(e)}", exc_info=True)
         return False
+
