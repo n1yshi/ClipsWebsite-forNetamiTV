@@ -273,7 +273,6 @@
             }
         }
         
-        /* Responsive adjustments */
         @media (max-width: 768px) {
             .error-num {
                 font-size: 10rem;
@@ -293,11 +292,9 @@
     <div class="noise"></div>
     
     <div class="maze" id="maze">
-        <!-- Maze lines will be added by JavaScript -->
     </div>
     
     <div class="particles" id="particles">
-        <!-- Particles will be added by JavaScript -->
     </div>
     
     <div class="container" id="container">
@@ -314,10 +311,8 @@
     <div class="lost-character" style="top: 40%; left: 90%; transform: scale(0.4) rotate(45deg);"></div>
     
     <script>
-        // Create maze lines
         const maze = document.getElementById('maze');
-        
-        // Create horizontal lines
+
         for (let i = 0; i < 15; i++) {
             const line = document.createElement('div');
             line.className = 'maze-line horizontal';
@@ -327,7 +322,6 @@
             maze.appendChild(line);
         }
         
-        // Create vertical lines
         for (let i = 0; i < 15; i++) {
             const line = document.createElement('div');
             line.className = 'maze-line vertical';
@@ -337,22 +331,18 @@
             maze.appendChild(line);
         }
         
-        // Create particles
         const particles = document.getElementById('particles');
         for (let i = 0; i < 50; i++) {
             const particle = document.createElement('div');
             particle.className = 'particle';
             
-            // Random size
             const size = Math.random() * 5 + 2;
             particle.style.width = `${size}px`;
             particle.style.height = `${size}px`;
             
-            // Random position
             particle.style.left = `${Math.random() * 100}%`;
             particle.style.bottom = `-${size}px`;
             
-            // Random animation duration and delay
             const duration = Math.random() * 10 + 5;
             particle.style.animationDuration = `${duration}s`;
             particle.style.animationDelay = `${Math.random() * 5}s`;
@@ -360,23 +350,18 @@
             particles.appendChild(particle);
         }
         
-        // 3D effect on mouse move
         const container = document.getElementById('container');
         document.addEventListener('mousemove', (e) => {
             const x = e.clientX / window.innerWidth;
             const y = e.clientY / window.innerHeight;
             
-            // Calculate rotation based on mouse position
             const rotateX = (y - 0.5) * 10;
             const rotateY = (x - 0.5) * -10;
             
-            // Apply rotation to container
             container.style.transform = `translateY(${container.style.translateY || 0}) rotateX(${rotateX}deg) rotateY(${rotateY}deg)`;
         });
         
-        // Add interactive elements
         document.addEventListener('click', (e) => {
-            // Create ripple effect
             const ripple = document.createElement('div');
             ripple.className = 'particle';
             ripple.style.width = '2px';
@@ -391,20 +376,17 @@
             
             document.body.appendChild(ripple);
             
-            // Remove after animation
             setTimeout(() => {
                 ripple.remove();
             }, 1000);
         });
         
-        // Add keyboard interaction
         document.addEventListener('keydown', (e) => {
             if (e.key === 'Escape') {
                 window.location.href = '/';
             }
         });
         
-        // Add parallax effect to lost characters
         const lostCharacters = document.querySelectorAll('.lost-character');
         document.addEventListener('mousemove', (e) => {
             const x = e.clientX / window.innerWidth;
@@ -420,4 +402,5 @@
         });
     </script>
 </body>
+
 </html>
