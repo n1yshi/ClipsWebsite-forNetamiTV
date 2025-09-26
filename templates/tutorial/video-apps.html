@@ -52,7 +52,6 @@
             z-index: 1;
         }
 
-        /* Navigation Bar */
         .nav-bar {
             position: relative;
             display: flex;
@@ -263,7 +262,6 @@
             margin-right: auto;
         }
 
-        /* Editor comparison styles */
         .editor-grid {
             display: grid;
             grid-template-columns: 1fr;
@@ -364,7 +362,6 @@
             line-height: 1.7;
         }
 
-        /* WICHTIGE ÄNDERUNG: Pros/Cons als Spalten statt als Grid */
         .pros-cons-grid {
             display: flex;
             flex-direction: column;
@@ -585,7 +582,6 @@
             transform: translateZ(5px);
         }
         
-        /* Animated background elements */
         .animated-bg {
             position: fixed;
             top: 0;
@@ -651,7 +647,6 @@
             </div>
             
             <div class="editor-grid">
-                <!-- CapCut -->
                 <div class="editor-card">
                     <div class="editor-header">
                         <img src="https://images.seeklogo.com/logo-png/43/1/capcut-logo-png_seeklogo-437025.png" alt="CapCut Logo" class="editor-logo">
@@ -706,7 +701,6 @@
                     </div>
                 </div>
                 
-                <!-- Adobe Premiere Pro -->
                 <div class="editor-card">
                     <div class="editor-header">
                         <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/4/40/Adobe_Premiere_Pro_CC_icon.svg/1200px-Adobe_Premiere_Pro_CC_icon.svg.png" alt="Adobe Premiere Pro Logo" class="editor-logo">
@@ -759,7 +753,6 @@
                     </div>
                 </div>
                 
-                <!-- DaVinci Resolve -->
                 <div class="editor-card">
                     <div class="editor-header">
                         <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/9/90/DaVinci_Resolve_17_logo.svg/1200px-DaVinci_Resolve_17_logo.svg.png" alt="DaVinci Resolve Logo" class="editor-logo">
@@ -856,7 +849,6 @@
     </footer>
 
     <script>
-        // 3D effect on mouse move for cards
         const editorCards = document.querySelectorAll('.editor-card');
         
         document.addEventListener('mousemove', (e) => {
@@ -868,17 +860,13 @@
                 const cardX = rect.left + rect.width / 2;
                 const cardY = rect.top + rect.height / 2;
                 
-                // Calculate distance from mouse to card center
                 const distX = (e.clientX - cardX) / (window.innerWidth / 2);
                 const distY = (e.clientY - cardY) / (window.innerHeight / 2);
                 
-                // Only apply effect if mouse is relatively close to the card
                 if (Math.abs(distX) < 0.5 && Math.abs(distY) < 0.5) {
-                    // Calculate rotation based on mouse position relative to card
                     const rotateY = distX * 5;
                     const rotateX = -distY * 5;
                     
-                    // Apply smooth rotation to card
                     card.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) translateZ(10px)`;
                     card.style.transition = 'transform 0.1s ease';
                 } else {
@@ -888,7 +876,6 @@
             });
         });
         
-        // Reset card position when mouse leaves
         document.addEventListener('mouseleave', () => {
             editorCards.forEach(card => {
                 card.style.transform = 'perspective(1000px) rotateX(0) rotateY(0) translateZ(0)';
@@ -896,7 +883,6 @@
             });
         });
         
-        // Add ripple effect on click
         document.addEventListener('click', (e) => {
             const ripple = document.createElement('div');
             ripple.className = 'ripple';
@@ -926,4 +912,5 @@
         });
     </script>
 </body>
+
 </html>
